@@ -1,45 +1,41 @@
 package ru.service.test.payment.controllers
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import ru.service.test.payment.models.request.AccountOperationRequestModel
-import ru.service.test.payment.models.request.TransferMoneyBetweenAccountsRequestModel
-import ru.service.test.payment.models.response.AccountResponseModel
+import ru.service.test.payment.dto.AccountMapper
+import ru.service.test.payment.dto.request.AccountOperationRequestDto
+import ru.service.test.payment.dto.request.TransferMoneyBetweenAccountsRequestDto
+import ru.service.test.payment.dto.response.AccountResponseDto
 import ru.service.test.payment.services.AccountService
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/payment/v1/accounts")
-class AccountController() {
-
-    private final lateinit var accountService: AccountService
-
-    @Autowired
-    constructor(accountService: AccountService): this() {
-        this.accountService = accountService
-    }
+class AccountController(
+        val accountService: AccountService,
+        val accountMapper: AccountMapper
+) {
 
     @GetMapping("/{id}")
-    fun getAccountBalance(@PathVariable id: Long): ResponseEntity<Any> {
-        val balance = accountService.getAccountBalance(id)
-        return ResponseEntity.ok(AccountResponseModel(balance))
+    fun getAccountBalance(@PathVariable id: Long): ResponseEntity<AccountResponseDto> {
+        val account = accountService.getAccountById(id)
+        return ResponseEntity.ok(accountMapper.toDto(account))
     }
 
-    @PatchMapping("/money/transfer")
-    fun transferMoneyToAnotherAccount(@RequestBody model: TransferMoneyBetweenAccountsRequestModel): ResponseEntity<Any> {
-
+    @PutMapping("/transfer")
+    fun transferMoneyToAnotherAccount(@Valid @RequestBody model: TransferMoneyBetweenAccountsRequestDto): ResponseEntity<Any> {
         accountService.transferMoney(model)
         return ResponseEntity.ok().build()
     }
 
-    @PatchMapping("/money/withdraw")
-    fun withdrawMoneyFromAccount(@RequestBody model: AccountOperationRequestModel): ResponseEntity<Any> {
+    @PutMapping("/withdraw")
+    fun withdrawMoneyFromAccount(@Valid @RequestBody model: AccountOperationRequestDto): ResponseEntity<Any> {
         accountService.withdrawMoney(model)
         return ResponseEntity.ok().build()
     }
 
-    @PatchMapping("/money/put")
-    fun putMoneyToAccount(@RequestBody model: AccountOperationRequestModel): ResponseEntity<Any> {
+    @PutMapping("/put")
+    fun putMoneyToAccount(@Valid @RequestBody model: AccountOperationRequestDto): ResponseEntity<Any> {
         accountService.putMoney(model)
         return ResponseEntity.ok().build()
     }
