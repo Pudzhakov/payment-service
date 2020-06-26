@@ -18,8 +18,6 @@ class AccountService(
     @Throws(TransactionException::class)
     fun getAccountById(accountId: Long): AccountEntity = accountRepository.findById(accountId).orElseThrow { TransactionException("Account not found with id: $accountId") }
 
-    fun getAccountBalance(accountId: Long) = getAccountById(accountId).balance
-
     @Throws(TransactionException::class)
     fun transferMoney(transferMoney: TransferMoneyBetweenAccountsRequestDto) {
 
