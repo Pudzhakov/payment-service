@@ -1,5 +1,6 @@
 package ru.service.test.payment.services
 
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.service.test.payment.common.exceptions.TransactionException
@@ -15,10 +16,16 @@ class AccountService(
         var accountRepository: AccountRepository
 ) {
 
+    companion object {
+        private val logger = LoggerFactory.getLogger(AccountService::class.java)
+    }
+
     @Throws(TransactionException::class)
     fun getAccountById(accountId: Long): AccountEntity = accountRepository.findById(accountId).orElseThrow { TransactionException("Account not found with id: $accountId") }
 
+    @Synchronized
     @Throws(TransactionException::class)
+    @Transactional
     fun transferMoney(transferMoney: TransferMoneyBetweenAccountsRequestDto) {
 
         val fromAccount = getAccountById(transferMoney.fromAccountId)
@@ -27,18 +34,26 @@ class AccountService(
         decreaseMoney(fromAccount, transferMoney.amount)
         increaseMoney(toAccount, transferMoney.amount)
 
+        logger.info("Successful transfer")
+
     }
 
     @Throws(TransactionException::class)
+    @Transactional
     fun withdrawMoney(model: AccountOperationRequestDto) {
+
         val account = getAccountById(model.accountId)
         decreaseMoney(account, model.amount)
+
     }
 
     @Throws(TransactionException::class)
-    fun putMoney(model: AccountOperationRequestDto) {
+    @Transactional
+    fun depositMoney(model: AccountOperationRequestDto) {
+
         val account = getAccountById(model.accountId)
         increaseMoney(account, model.amount)
+
     }
 
     @Throws(TransactionException::class)

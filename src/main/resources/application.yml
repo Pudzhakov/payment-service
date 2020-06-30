@@ -8,13 +8,21 @@ spring:
    jpa:
      database-platform: org.hibernate.dialect.H2Dialect
      hibernate:
-       ddl-auto: update
+       ddl-auto: none
 
    datasource:
      url: jdbc:h2:mem:testdb
      driver-class-name: org.h2.Driver
      username: sa
-     password: password
+     #password: password
+     #hikari:
+     #  schema: public
 
+   flyway:
+     baseline-on-migrate: true
+     user: sa
+     #password: password
+     #schemas: public
+     url: jdbc:h2:mem:testdb
 
 ---

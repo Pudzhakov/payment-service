@@ -8,8 +8,7 @@ import javax.persistence.*
 class AccountEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     var id: Long? = null
 
     @Column(name = "balance", precision = 10, scale = 2, nullable = false,

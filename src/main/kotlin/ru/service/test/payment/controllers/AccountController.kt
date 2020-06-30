@@ -1,5 +1,6 @@
 package ru.service.test.payment.controllers
 
+import io.swagger.annotations.Api
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import ru.service.test.payment.dto.AccountMapper
@@ -9,6 +10,7 @@ import ru.service.test.payment.dto.response.AccountResponseDto
 import ru.service.test.payment.services.AccountService
 import javax.validation.Valid
 
+@Api(tags = ["Accounts API"])
 @RestController
 @RequestMapping("/api/payment/v1/accounts")
 class AccountController(
@@ -34,9 +36,9 @@ class AccountController(
         return ResponseEntity.ok().build()
     }
 
-    @PutMapping("/put")
-    fun putMoneyToAccount(@Valid @RequestBody model: AccountOperationRequestDto): ResponseEntity<Any> {
-        accountService.putMoney(model)
+    @PutMapping("/deposit")
+    fun depositMoneyToAccount(@Valid @RequestBody model: AccountOperationRequestDto): ResponseEntity<Any> {
+        accountService.depositMoney(model)
         return ResponseEntity.ok().build()
     }
 
