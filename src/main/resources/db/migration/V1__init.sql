@@ -7,4 +7,4 @@ CREATE TABLE IF NOT EXISTS accounts
 );
 
 
-INSERT INTO accounts (balance) VALUES('100.00'), ('150.00');
+INSERT INTO accounts (balance) VALUES('100.00'), ('100.00');
